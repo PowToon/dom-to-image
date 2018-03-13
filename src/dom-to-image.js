@@ -592,7 +592,7 @@
                 result.push(match[1]);
             }
             return result.filter(function (url) {
-                return !util.isDataUrl(url);
+                return !util.isDataUrl(url) && !(url[0] === '#');
             });
         }
 
