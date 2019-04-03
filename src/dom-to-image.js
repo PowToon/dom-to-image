@@ -493,7 +493,7 @@
                         if(placeholder) {
                             resolve(placeholder);
                         } else {
-                            fail('cannot fetch resource: ' + url + ', status: ' + request.status);
+                            fail('cannot fetch resource', {status: request.status, url: url });
                         }
 
                         return;
@@ -511,12 +511,16 @@
                     if(placeholder) {
                         resolve(placeholder);
                     } else {
-                        fail('timeout of ' + TIMEOUT + 'ms occured while fetching resource: ' + url);
+                        fail('timeout of ' + TIMEOUT + 'ms occured while fetching resource', { url: url });
                     }
                 }
 
-                function fail(message) {
-                    console.error(message);
+                function fail(message, data) {
+                    if (typeof Sentry !== undefined) {
+                        Sentry.captureException(message, data);
+                    } else {
+                        console.error(message, data);
+                    }
                     resolve('');
                 }
             });
